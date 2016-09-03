@@ -71,6 +71,35 @@ const FilterLink = ({
   );
 }
 
+const Todo = ({
+  onClick,
+  completed,
+  text
+}) => {
+  <li key={todo.id}
+  onClick={onClick}
+  style={{textDecoration: completed ? 'line-through' : '', cursor: 'pointer'}}
+    >
+      {text}
+      </li>
+};
+const TodoList = ({
+  todos,
+  onTodoClick
+}) => (
+  <ul>
+    {
+      todos.map (
+        todo => 
+          <Todo 
+            key={todo.id} 
+            {...todo}>
+            onClick={() => onTodoClick(todo.id)}
+          />
+      )
+    }
+  </ul>
+)
 const getVisibleTodos = (
   todos,
   filter
@@ -113,16 +142,15 @@ class TodoApp extends Component {
         >
           Add Todo
         </button>
-        <ul>{visibleTodos.map(todo=> 
-              <li key={todo.id}
-                onClick={()=>{store.dispatch({type:'TOGGLE_TODO', id: todo.id}); console.log(store.getState());}}
-                style={{textDecoration: todo.completed ? 'line-through' : '', cursor: 'pointer'}}
-              >
-               {todo.text}
-              </li>
-            )
+        <TodoList
+          todos={visibleTodos}
+          onTodoClick={id =>
+            store.dispatch({
+              type: 'TOGGLE_TODO',
+              id
+            })
           }
-        </ul>
+        />
         <p>
           Show:
           {' '}
